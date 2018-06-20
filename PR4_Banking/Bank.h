@@ -17,8 +17,8 @@ private:
 	std::vector<Customer *> customers;  // Bank HAS customers
 	
 	// Counters for generating unique account and customer IDs
-	int account_id = 0;     
-	int customer_id = 0;
+	int account_id;
+	int customer_id;
 
 
 	/**
