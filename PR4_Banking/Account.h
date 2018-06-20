@@ -38,12 +38,6 @@ protected:
 
 		stringstream ss;
 		ss << "Check Charge: " << charge << " Overdraft Fee: " << overdraft;
-
-		// Polymorphism: calls the correct virtual methods from the specific customer type
-		// FIXME: Get the overdraft and check charge information from this accounts customer
-
-
-		ss << "Check Charge: " << charge << " Overdraft Fee: " << overdraft;
 		return ss.str();
 	}
 
@@ -221,7 +215,6 @@ string Account::to_string()
 	else if (typeid(Checking_Account) == typeid(*this))
 	{
 		ss << dynamic_cast<Checking_Account*>(this)->tostring();
-		// FIXME: Add information about the customer who owns this account.
 
 		ss << "  Balance: " << balance << std::endl;
 		ss << "  Account ID: " << account_number << std::endl;

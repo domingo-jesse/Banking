@@ -182,7 +182,6 @@ public:
 		cust->set_age(age);
 		cust->set_customerAccount(account_type);
 		
-		// FIXME: Depending on the customer type, we want to create an Adult, Senior, or Student object.
 
 		customers.push_back(cust);
 		return add_account(cust, account_type);
@@ -222,7 +221,7 @@ public:
 		{
 			std::cout << "Account " << acct_number << " could not be found. " << std::endl;
 		}
-			// FIXME: Withdraw the amt from the account
+
 	}
 
 	/**
