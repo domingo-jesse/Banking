@@ -17,8 +17,8 @@ private:
 	std::vector<Customer *> customers;  // Bank HAS customers
 	
 	// Counters for generating unique account and customer IDs
-	int account_id;     
-	int customer_id;
+	int account_id = 0;     
+	int customer_id = 0;
 
 
 	/**
@@ -30,8 +30,22 @@ private:
 	std::vector<int> find_accounts_by_name(std::string name)
 	{
 		std::vector<int> user_accounts;
+		for (int j = 0; j < accounts.size(); j++)
+		{
+			//Object is pointing to the accounts of the customer
+			Customer *C1 = accounts[j]->get_customer();
+			Account *A1 = accounts[j];
 
-		// FIXME: Find all the accounts belonging to a customer name and add it to the vector of account numbers.
+			//Finds the customers ID
+			int acct_id = A1->get_account();
+
+			//Finds the customers name
+			string name_ = C1->get_name();
+			if (name_ == name)
+			{
+				user_accounts.push_back(acct_id);
+			}
+		}
 		
 		return user_accounts;
 	}
@@ -43,7 +57,15 @@ private:
 	*/
 	Customer *find_customer(std::string name)
 	{
-		// FIXME: Find and return the Customer object with the parameter name
+		for (int i = 0; i < customers.size(); i++)
+		{
+			//Finds the customer (by name) in the database
+			if (customers[i]->get_name() == name)
+			{
+				//Returns that customer
+				return customers[i];
+			}
+		}
 		return NULL;
 	}
 
@@ -56,8 +78,38 @@ private:
 	Account * add_account (Customer *cust, std::string account_type)
 	{
 		Account *acct = NULL;
+		string accountType = account_type;
 
-		// FIXME: Factory method for creating a Account object (could be a Saving_Account or a Checking_Account).
+		for (int i = 0; i < customers.size(); i++)
+		{
+			string name = cust->get_name();
+
+			//Create a new account for an existing customer
+			if (customers[i]->get_name() == name)
+			{
+				//Customer wants to create a savings account
+				if (accountType == "savings")
+				{
+					//generate an account number
+					++account_id;
+
+					//Create a new Savings Account, passing in the cust (customer name, type) and new account number
+					acct = new Savings_Account(cust, account_id);
+					accounts.push_back(acct);
+				}
+
+				else if (accountType == "checking")
+				{
+					//generate an account number
+					++account_id;
+
+					//Create a new Checking Account, passing the the cuse (customer name, type) and new account number
+					acct = new Checking_Account(cust, account_id);
+					accounts.push_back(acct);
+				}
+			}
+		}
+
 		
 		return acct;
 	}
@@ -94,7 +146,41 @@ public:
 	Account* add_account(std::string name, std::string address, std::string telephone, int age, 
 		std::string cust_type, std::string account_type)
 	{
-		Customer *cust;
+		Customer *cust = NULL;
+
+		if (cust_type == "senior")
+		{
+			//Create a new Senior Customer
+			++customer_id;
+
+			//Create a new Senior object with name, id and senior
+			cust = new Senior(name, customer_id, cust_type);
+		}
+		else if (cust_type == "adult")
+		{
+			//Create a new Senior Customer
+			++customer_id;
+
+			//Create a new Adult object with name, id and senior
+			cust = new Adult(name, customer_id, cust_type);
+		}
+		else
+		{
+			//Create a new Senior Customer
+			++customer_id;
+
+			//Create a new Student object with name, id and senior
+			cust = new Student(name, customer_id, cust_type);
+		}
+
+		//Set the customers id that is being incremented.
+		cust->set_customerID(customer_id);
+
+		cust->set_name(name);
+		cust->set_address(address);
+		cust->set_PhoneNumber(telephone);
+		cust->set_age(age);
+		cust->set_customerAccount(account_type);
 		
 		// FIXME: Depending on the customer type, we want to create an Adult, Senior, or Student object.
 
@@ -110,8 +196,13 @@ public:
 	void make_deposit(int acct_number, double amt) 
 	{
 		Account *acct = get_account(acct_number);
-		if (acct) {
-			// FIXME: Deposit the amt in the account
+		if (acct) 
+		{
+			acct->deposit(amt);
+		}
+		else
+		{
+			std::cout << "Account " << acct_number << " could not be found. " << std::endl;
 		}
 	}
 
@@ -123,9 +214,15 @@ public:
 	void make_withdrawal(int acct_number, double amt) 
 	{
 		Account *acct = get_account(acct_number);
-		if (acct) {
-			// FIXME: Withdraw the amt from the account
+		if (acct)
+		{
+			acct->withdraw(amt);
 		}
+		else
+		{
+			std::cout << "Account " << acct_number << " could not be found. " << std::endl;
+		}
+			// FIXME: Withdraw the amt from the account
 	}
 
 	/**
